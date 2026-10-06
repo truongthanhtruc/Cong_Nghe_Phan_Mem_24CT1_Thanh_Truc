@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beauty Store - Trello</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f8eaf0;
+    padding:25px;
+}
+
+header{
+    background:#d94f87;
+    color:white;
+    padding:22px;
+    border-radius:15px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h1{
+    font-size:28px;
+    margin-bottom:6px;
+}
+
+.header-right{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.header-btn{
+    border:0;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    background:white;
+    color:#d94f87;
+}
+
+.header-btn:hover{
+    background:#ffe5ef;
+}
+
+.board{
+    display:flex;
+    gap:20px;
+    overflow-x:auto;
+    align-items:flex-start;
+}
+
+.column{
+    background:#f1d7e2;
+    width:330px;
+    min-width:330px;
+    min-height:500px;
+    padding:15px;
+    border-radius:15px;
+}
+
+.column-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.count{
+    background:#d94f87;
+    color:white;
+    padding:5px 10px;
+    border-radius:20px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:15px;
+    box-shadow:0 3px 8px rgba(0,0,0,.12);
+}
+
+.card img{
+    width:100%;
+    height:190px;
+    object-fit:cover;
+    display:block;
+}
+
+.card-info{
+    padding:14px;
+}
+
+.card-info h3{
+    margin-bottom:8px;
+    color:#333;
+}
+
+.price{
+    color:#d94f87;
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.quantity{
+    color:#666;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.category{
+    display:inline-block;
+    background:#f8d5e2;
+    color:#a83262;
+    padding:5px 9px;
+    border-radius:15px;
+    font-size:12px;
+}
+
+.card-buttons{
+    display:flex;
+    gap:7px;
+    margin-top:10px;
+}
+
+.delete-btn,
+.cart-btn{
+    border:0;
+    padding:8px 10px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.delete-btn{
+    background:#ffe0e0;
+    color:#d33;
+}
+
+.cart-btn{
+    background:#d94f87;
+    color:white;
+    flex:1;
+}
+
+.cart-btn:hover{
+    background:#b9366d;
+}
+
+.add-btn{
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:9px;
+    background:white;
+    color:#d94f87;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.add-btn:hover{
+    background:#d94f87;
+    color:white;
+}
+
+/* MODAL */
+.modal{
+    display:none;
+    position:fixed;
+    z-index:1000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-box{
+    background:white;
+    width:400px;
+    max-width:90%;
+    padding:25px;
+    border-radius:15px;
+    position:relative;
+}
+
+.modal-box h2{
+    color:#d94f87;
+    margin-bottom:20px;
+}
+
+.close{
+    position:absolute;
+    right:18px;
+    top:12px;
+    font-size:25px;
+    cursor:pointer;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+.form-group input{
+    width:100%;
+    padding:11px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.submit-btn{
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:8px;
+    background:#d94f87;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.switch-form{
+    text-align:center;
+    margin-top:15px;
+}
+
+.switch-form span{
+    color:#d94f87;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* GIỎ HÀNG */
+.cart-box{
+    width:500px;
+    max-width:95%;
+}
+
+.cart-item{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+    align-items:center;
+}
+
+.cart-item img{
+    width:70px;
+    height:70px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.cart-info{
+    flex:1;
+}
+
+.cart-info h4{
+    margin-bottom:5px;
+}
+
+.cart-price{
+    color:#d94f87;
+    font-weight:bold;
+}
+
+.quantity-control{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:7px;
+}
+
+.quantity-control button{
+    width:25px;
+    height:25px;
+    border:0;
+    border-radius:5px;
+    background:#f1d7e2;
+    cursor:pointer;
+}
+
+.remove-cart{
+    border:0;
+    background:#ffe0e0;
+    color:#d33;
+    padding:5px 8px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.cart-total{
+    text-align:right;
+    margin-top:18px;
+    font-size:20px;
+    font-weight:bold;
+    color:#d94f87;
+}
+
+.checkout-btn{
+    width:100%;
+    margin-top:15px;
+    padding:12px;
+    border:0;
+    border-radius:8px;
+    background:#d94f87;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.empty-cart{
+    text-align:center;
+    padding:20px;
+    color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>💄 Beauty Store</h1>
+        <p>Quản lý shop mỹ phẩm</p>
+    </div>
+
+    <div class="header-right">
+        <button class="header-btn" onclick="openLogin()" id="accountBtn">
+            🔑 Đăng nhập
+        </button>
+
+        <button class="header-btn" onclick="openCart()">
+            🛒 Giỏ hàng (<span id="cartCount">0</span>)
+        </button>
+    </div>
+</header>
+
+
+<div class="board">
+
+<!-- Ý TƯỞNG -->
+<div class="column">
+
+    <div class="column-title">
+        <h2>💡 Ý tưởng</h2>
+        <span class="count">0</span>
+    </div>
+
+    <div id="idea"></div>
+
+    <button class="add-btn" onclick="alert('Chức năng thêm sản phẩm đang được phát triển!')">
+        + Thêm sản phẩm
+    </button>
+
+</div>
+
+
+<!-- ĐANG BÁN -->
+<div class="column">
+
+    <div class="column-title">
+        <h2>🛍️ Đang bán</h2>
+        <span class="count">5</span>
+    </div>
+
+
+    <!-- 3CE -->
+    <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=700&q=80"
+             alt="3CE Glazy Lip Glow">
+
+        <div class="card-info">
+
+            <h3>💄 3CE Glazy Lip Glow</h3>
+
+            <div class="price">210.000đ</div>
+
+            <div class="quantity">
+                📦 Số lượng: 20
+            </div>
+
+            <span class="category">Son môi</span>
+
+            <div class="card-buttons">
+                <button class="cart-btn"
+                    onclick="addToCart('3CE Glazy Lip Glow',210000,'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=700&q=80')">
+                    🛒 Thêm vào giỏ
+                </button>
+
+                <button class="delete-btn"
+                    onclick="this.closest('.card').remove()">
+                    🗑 Xóa
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- 3CE GLAZE LIP TINT -->
+    <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?auto=format&fit=crop&w=700&q=80"
+             alt="3CE Glaze Lip Tint">
+
+        <div class="card-info">
+
+            <h3>💋 3CE Glaze Lip Tint</h3>
+
+            <div class="price">190.000đ</div>
+
+            <div class="quantity">
+                📦 Số lượng: 15
+            </div>
+
+            <span class="category">Son tint</span>
+
+            <div class="card-buttons">
+
+                <button class="cart-btn"
+                    onclick="addToCart('3CE Glaze Lip Tint',190000,'https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?auto=format&fit=crop&w=700&q=80')">
+                    🛒 Thêm vào giỏ
+                </button>
+
+                <button class="delete-btn"
+                    onclick="this.closest('.card').remove()">
+                    🗑 Xóa
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- CERAVE -->
+    <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=700&q=80"
+             alt="CeraVe Skincare">
+
+        <div class="card-info">
+
+            <h3>🧴 CeraVe Moisturizing Cream</h3>
+
+            <div class="price">350.000đ</div>
+
+            <div class="quantity">
+                📦 Số lượng: 12
+            </div>
+
+            <span class="category">Skincare</span>
+
+            <div class="card-buttons">
+
+                <button class="cart-btn"
+                    onclick="addToCart('CeraVe Moisturizing Cream',350000,'https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=700&q=80')">
+                    🛒 Thêm vào giỏ
+                </button>
+
+                <button class="delete-btn"
+                    onclick="this.closest('.card').remove()">
+                    🗑 Xóa
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- THE ORDINARY -->
+    <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=700&q=80"
+             alt="The Ordinary Serum">
+
+        <div class="card-info">
+
+            <h3>✨ The Ordinary Serum</h3>
+
+            <div class="price">320.000đ</div>
+
+            <div class="quantity">
+                📦 Số lượng: 10
+            </div>
+
+            <span class="category">Serum</span>
+
+            <div class="card-buttons">
+
+                <button class="cart-btn"
+                    onclick="addToCart('The Ordinary Serum',320000,'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=700&q=80')">
+                    🛒 Thêm vào giỏ
+                </button>
+
+                <button class="delete-btn"
+                    onclick="this.closest('.card').remove()">
+                    🗑 Xóa
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- LOREAL -->
+    <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=700&q=80"
+             alt="L'Oreal Makeup">
+
+        <div class="card-info">
+
+            <h3>💄 L'Oréal Makeup</h3>
+
+            <div class="price">299.000đ</div>
+
+            <div class="quantity">
+                📦 Số lượng: 8
+            </div>
+
+            <span class="category">Makeup</span>
+
+            <div class="card-buttons">
+
+                <button class="cart-btn"
+                    onclick="addToCart('L’Oréal Makeup',299000,'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=700&q=80')">
+                    🛒 Thêm vào giỏ
+                </button>
+
+                <button class="delete-btn"
+                    onclick="this.closest('.card').remove()">
+                    🗑 Xóa
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- HẾT HÀNG -->
+<div class="column">
+
+    <div class="column-title">
+        <h2>❌ Hết hàng</h2>
+        <span class="count">0</span>
+    </div>
+
+    <div id="out"></div>
+
+    <button class="add-btn" onclick="alert('Chức năng thêm sản phẩm đang được phát triển!')">
+        + Thêm sản phẩm
+    </button>
+
+</div>
+
+</div>
+
+
+<!-- ================= ĐĂNG NHẬP / ĐĂNG KÝ ================= -->
+
+<div class="modal" id="authModal">
+
+    <div class="modal-box">
+
+        <span class="close" onclick="closeModal()">×</span>
+
+        <div id="loginForm">
+
+            <h2>🔑 Đăng nhập</h2>
+
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" id="loginUsername"
+                       placeholder="Nhập tên đăng nhập">
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="loginPassword"
+                       placeholder="Nhập mật khẩu">
+            </div>
+
+            <button class="submit-btn" onclick="login()">
+                Đăng nhập
+            </button>
+
+            <div class="switch-form">
+                Chưa có tài khoản?
+                <span onclick="showRegister()">Đăng ký</span>
+            </div>
+
+        </div>
+
+
+        <div id="registerForm" style="display:none">
+
+            <h2>📝 Đăng ký tài khoản</h2>
+
+            <div class="form-group">
+                <label>Họ tên</label>
+                <input type="text" id="registerName"
+                       placeholder="Nhập họ tên">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="registerEmail"
+                       placeholder="Nhập email">
+            </div>
+
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" id="registerUsername"
+                       placeholder="Nhập tên đăng nhập">
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="registerPassword"
+                       placeholder="Nhập mật khẩu">
+            </div>
+
+            <button class="submit-btn" onclick="register()">
+                Đăng ký
+            </button>
+
+            <div class="switch-form">
+                Đã có tài khoản?
+                <span onclick="showLogin()">Đăng nhập</span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ================= GIỎ HÀNG ================= -->
+
+<div class="modal" id="cartModal">
+
+    <div class="modal-box cart-box">
+
+        <span class="close" onclick="closeCart()">×</span>
+
+        <h2>🛒 Giỏ hàng</h2>
+
+        <div id="cartItems"></div>
+
+        <div class="cart-total">
+            Tổng tiền: <span id="cartTotal">0đ</span>
+        </div>
+
+        <button class="checkout-btn" onclick="checkout()">
+            💳 Đặt hàng
+        </button>
+
+    </div>
+</div>
+
+
+<script>
+
+/* ================= TÀI KHOẢN ================= */
+
+function openLogin(){
+    document.getElementById("authModal").style.display = "flex";
+    showLogin();
+}
+
+function closeModal(){
+    document.getElementById("authModal").style.display = "none";
+}
+
+function showRegister(){
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("registerForm").style.display = "block";
+}
+
+function showLogin(){
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("registerForm").style.display = "none";
+}
+
+
+function register(){
+
+    let name = document.getElementById("registerName").value;
+    let email = document.getElementById("registerEmail").value;
+    let username = document.getElementById("registerUsername").value;
+    let password = document.getElementById("registerPassword").value;
+
+    if(name === "" || email === "" || username === "" || password === ""){
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+    }
+
+    localStorage.setItem("beautyUser", JSON.stringify({
+        name:name,
+        email:email,
+        username:username,
+        password:password
+    }));
+
+    alert("Đăng ký thành công!");
+
+    showLogin();
+}
+
+
+function login(){
+
+    let username = document.getElementById("loginUsername").value;
+    let password = document.getElementById("loginPassword").value;
+
+    let user = JSON.parse(localStorage.getItem("beautyUser"));
+
+    if(!user){
+        alert("Chưa có tài khoản! Vui lòng đăng ký trước.");
+        return;
+    }
+
+    if(username === user.username && password === user.password){
+
+        localStorage.setItem("isLoggedIn","true");
+
+        alert("Đăng nhập thành công!");
+
+        closeModal();
+
+        updateAccountButton();
+
+    }else{
+
+        alert("Tên đăng nhập hoặc mật khẩu không đúng!");
+
+    }
+}
+
+
+function logout(){
+
+    localStorage.removeItem("isLoggedIn");
+
+    alert("Đã đăng xuất!");
+
+    updateAccountButton();
+}
+
+
+function updateAccountButton(){
+
+    let button = document.getElementById("accountBtn");
+
+    if(localStorage.getItem("isLoggedIn") === "true"){
+
+        button.innerHTML = "🚪 Đăng xuất";
+        button.onclick = logout;
+
+    }else{
+
+        button.innerHTML = "🔑 Đăng nhập";
+        button.onclick = openLogin;
+
+    }
+}
+
+
+/* ================= GIỎ HÀNG ================= */
+
+let cart = JSON.parse(localStorage.getItem("beautyCart")) || [];
+
+
+function addToCart(name,price,image){
+
+    if(localStorage.getItem("isLoggedIn") !== "true"){
+
+        alert("Vui lòng đăng nhập trước khi thêm sản phẩm vào giỏ hàng!");
+
+        openLogin();
+
+        return;
+    }
+
+    let existingProduct = cart.find(item => item.name === name);
+
+    if(existingProduct){
+
+        existingProduct.quantity++;
+
+    }else{
+
+        cart.push({
+            name:name,
+            price:price,
+            image:image,
+            quantity:1
+        });
+
+    }
+
+    saveCart();
+
+    alert("Đã thêm sản phẩm vào giỏ hàng!");
+
+}
+
+
+function saveCart(){
+
+    localStorage.setItem("beautyCart",JSON.stringify(cart));
+
+    updateCartCount();
+
+}
+
+
+function updateCartCount(){
+
+    let count = cart.reduce((total,item) => total + item.quantity,0);
+
+    document.getElementById("cartCount").innerText = count;
+
+}
+
+
+function openCart(){
+
+    renderCart();
+
+    document.getElementById("cartModal").style.display = "flex";
+
+}
+
+
+function closeCart(){
+
+    document.getElementById("cartModal").style.display = "none";
+
+}
+
+
+function renderCart(){
+
+    let cartItems = document.getElementById("cartItems");
+
+    if(cart.length === 0){
+
+        cartItems.innerHTML =
+        '<div class="empty-cart">🛒 Giỏ hàng đang trống</div>';
+
+        document.getElementById("cartTotal").innerText = "0đ";
+
+        return;
+    }
+
+    cartItems.innerHTML = "";
+
+    let total = 0;
+
+    cart.forEach((item,index) => {
+
+        total += item.price * item.quantity;
+
+        cartItems.innerHTML += `
+
+        <div class="cart-item">
+
+            <img src="${item.image}" alt="${item.name}">
+
+            <div class="cart-info">
+
+                <h4>${item.name}</h4>
+
+                <div class="cart-price">
+                    ${item.price.toLocaleString("vi-VN")}đ
+                </div>
+
+                <div class="quantity-control">
+
+                    <button onclick="decreaseQuantity(${index})">
+                        −
+                    </button>
+
+                    <span>${item.quantity}</span>
+
+                    <button onclick="increaseQuantity(${index})">
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+            <button class="remove-cart"
+                    onclick="removeFromCart(${index})">
+                🗑
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("cartTotal").innerText =
+        total.toLocaleString("vi-VN") + "đ";
+
+}
+
+
+function increaseQuantity(index){
+
+    cart[index].quantity++;
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+function decreaseQuantity(index){
+
+    if(cart[index].quantity > 1){
+
+        cart[index].quantity--;
+
+    }else{
+
+        cart.splice(index,1);
+
+    }
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+function removeFromCart(index){
+
+    cart.splice(index,1);
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+/* ================= ĐẶT HÀNG ================= */
+
+function checkout(){
+
+    if(cart.length === 0){
+
+        alert("Giỏ hàng đang trống!");
+
+        return;
+    }
+
+    let address = prompt("Nhập địa chỉ nhận hàng:");
+
+    if(!address){
+
+        alert("Bạn chưa nhập địa chỉ!");
+
+        return;
+    }
+
+    alert(
+        "🎉 Đặt hàng thành công!\n\n" +
+        "Địa chỉ giao hàng: " + address
+    );
+
+    cart = [];
+
+    saveCart();
+
+    closeCart();
+
+}
+
+
+/* ================= KHỞI ĐỘNG ================= */
+
+updateAccountButton();
+
+updateCartCount();
+
+</script>
+
+</body>
+</html>
